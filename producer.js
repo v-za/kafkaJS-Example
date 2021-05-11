@@ -11,7 +11,8 @@ try {
     // print all lines
     lines.pop();
     lines.forEach((line) => {
-        trucks.push(JSON.parse(line))
+        // trucks.push(JSON.parse(line))
+        trucks.push(line)
     });
 } catch (err) {
     console.error(err);
@@ -38,11 +39,12 @@ const produce = async () => {
                 messages : [
                     {
                         key : String(idx),
-                        value : String(trucks[idx].engine_temperature)
+                        // value : String(trucks[idx].engine_temperature)
+                        value: String(trucks[idx])
                     }
                 ]
             })
-        console.log('Published message, engine_temperature', trucks[idx].engine_temperature )
+        // console.log('Published message, engine_temperature', trucks[idx].engine_temperature )
         idx++;
         }
         catch (err) {
@@ -76,7 +78,8 @@ const consumer = kafka.consumer({
           topic,
           partition,
           key: message.key.toString(),
-          value: message.value.toString()
+          value: JSON.parse(message.value.toString()),
+          valueString: message.value.toString()
         })
       }
     })
