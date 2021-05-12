@@ -19,5 +19,17 @@ class Confluent {
     }
  }
 
+//  class Consumer {
+//      constructor(topic, event){
+//          this.topic = topic;
+//          this.event = event
+//          this.consumer = 
+//      }
+
+//      async consume() {
+
+//      }
+//  }
+
 module.exports = Confluent;
 

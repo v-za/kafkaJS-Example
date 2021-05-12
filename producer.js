@@ -28,7 +28,7 @@ const produce = async () => {
 
    const interval = setInterval( async () => {
         if(idx>=trucks.length-1) {
-            console.log('in here')
+            console.log('in interval inside produce')
             console.log(idx)
             clearInterval(interval);
         }
@@ -44,6 +44,7 @@ const produce = async () => {
                     }
                 ]
             })
+        console.log("Published message ", trucks[idx]);
         // console.log('Published message, engine_temperature', trucks[idx].engine_temperature )
         idx++;
         }
@@ -54,43 +55,9 @@ const produce = async () => {
     }, 1000)
 }
 
-produce().catch(error => {
-    console.log(error);
-    process.exit(1);
-})
+module.exports = produce;
+// produce().catch(error => {
+//     console.log(error);
+//     process.exit(1);
+// })
 
-const consumer = kafka.consumer({
-    groupId: 'truck-group'
-  })
-  
-  const consume = async () => {
-    await consumer.connect()
-  
-    await consumer.subscribe({
-      topic: process.env.TOPIC,
-      // topic: process.env.TOPIC,
-      fromBeginning: true
-    })
-  
-    await consumer.run({
-      eachMessage: async ({ topic, partition, message }) => {
-        console.log('Received message', {
-          topic,
-          partition,
-          key: message.key.toString(),
-          value: JSON.parse(message.value.toString()),
-          valueString: message.value.toString()
-        })
-      }
-    })
-  }
-  
-  consume().catch(async error => {
-    console.error(error)
-    try {
-      await consumer.disconnect()
-    } catch (e) {
-      console.error('Failed to gracefully disconnect consumer', e)
-    }
-    process.exit(1)
-  })
