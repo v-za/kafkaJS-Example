@@ -19,6 +19,7 @@ const consumer = kafka.consumer({
           partition,
           key: message.key.toString(),
           value: message.value.toString()
+          // value: message.value
         })
       }
     })
