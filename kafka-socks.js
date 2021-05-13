@@ -19,17 +19,38 @@ class Confluent {
     }
  }
 
-//  class Consumer {
-//      constructor(topic, event){
-//          this.topic = topic;
-//          this.event = event
-//          this.consumer = 
-//      }
+ class Consumer {
 
-//      async consume() {
+     constructor(consumer,topic, event, io){
+         this.consumer = consumer;
+         this.topic = topic;
+         this.event = event;  
+         this.io = io;
+     }
 
-//      }
-//  }
+     async run() {
+        await this.consumer.connect()
+    
+        await this.consumer.subscribe({
+          topic: this.topic,
+          // topic: process.env.TOPIC,
+          fromBeginning: true
+        })
+      
+        await this.consumer.run({
+          eachMessage: async ({ topic, partition, message }) => {
+          this.io.emit(this.event, message.value.toString())
+         console.log('Received Message', 
+              JSON.parse(message.value.toString()))
+          }
+        })
+         
 
-module.exports = Confluent;
+     }
+ }
+
+module.exports = {
+  Confluent,
+  Consumer
+};
 
