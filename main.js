@@ -1,6 +1,7 @@
 const produce = require('./producer');
 const kafka = require('./kafka');
 const { Consumer } = require('./kafka-socks');
+const { Subject } = require('./kafka-socks')
 require('dotenv').config();
 const express = require('express');
 const port = process.env.PORT
@@ -18,25 +19,40 @@ app.get('/', (req, res) => {
 // in the html we do this
 //socket.emit('consumer', consumer)
 //io.on('consumer' (socket, consumer))
+        
+produce().catch(error => {
+  console.log(error);
+  process.exit(1);
+})
 
-io.on('connection', socket => {
+const consumer = kafka.consumer({
+  groupId: 'truck-group'
+})
+
+const consumer_run = new Consumer(consumer, process.env.TOPIC, 'truck message')
+const subject = new Subject(io)
+subject.add(consumer_run)
+subject.connect()
+
+
+// io.on('connection', socket => {
   
 
-    produce().catch(error => {
-    console.log(error);
-    process.exit(1);
-  })
+  //   produce().catch(error => {
+  //   console.log(error);
+  //   process.exit(1);
+  // })
 
-    const consumer = kafka.consumer({
-      groupId: 'truck-group'
-    })
+//     const consumer = kafka.consumer({
+//       groupId: 'truck-group'
+//     })
 
-    const consumer_run = new Consumer(consumer, process.env.TOPIC, 'truck message', io)
+//     const consumer_run = new Consumer(consumer, process.env.TOPIC, 'truck message', io)
 
-    consumer_run.run()
+//     consumer_run.run()
   
 
-  })
+//   })
 
 //   .catch(async error => {
 //     console.error(error)
