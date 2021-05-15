@@ -29,6 +29,7 @@ const consumer = kafka.consumer({
   groupId: 'truck-group'
 })
 
+
 const consumer_run = new Consumer(consumer, process.env.TOPIC, 'truck message')
 const subject = new Subject(io)
 subject.add(consumer_run)
