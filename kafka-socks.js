@@ -59,8 +59,6 @@ class Confluent {
    }
    connect(){
       this.io.on('connection', socket => {
-
-
         this.consumers.forEach(consumer => {
           consumer.run(this.io)
         })
